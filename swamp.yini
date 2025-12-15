@@ -1,0 +1,6 @@
+# This is for the Swamp compiler
+# you define the artifacts you want to compile
+# in this case we only have the normal application in `src/`
+members [
+    src/
+]

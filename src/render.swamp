@@ -1,0 +1,61 @@
+use mangrove::render::*
+mod logic
+
+// Render struct is the games render state. You can add the things you want to it.
+struct Render {
+    // MaterialHandle is a reference to a sprite/texture resource
+    // The full path `mangrove::render::MaterialHandle` is used here just to show
+    // an alternative way to reference it
+    // (you could shorten it to just `MaterialHandle` since we imported with *)
+    flying_material_ref: mangrove::render::MaterialHandle,
+}
+
+// Implementation of member functions for the Render struct
+impl Render {
+
+    // Function to create the Render. It is a normal associated function, you can
+    // call it whatever you want, but it is idiomatic to name it `new()`
+    // It is used by the anchor `render` to initialize the Render struct.
+    fn new() -> Render {
+        Render {
+            // The @ is used for resource ids. A resource id is the relative path
+            // from `assets/` directory, without extension
+            // It matches the name in `assets/bat_46x30.png` (without extension)
+            flying_material_ref: @bat_46x30,
+        }
+    }
+
+    // The render member function is called by the engine every render frame
+    // the render frame happens as quickly as possible, so it can be a lot more than 60 Hz
+    // `#[host_call]` means the game engine automatically calls this, you should not call it yourself
+    // The engine passes your current simulation state (Logic) as a parameter
+    #[host_call]
+    fn render(mut self, logic: logic::Logic) {
+        // Get the current x position from the game logic
+        // := is used for local variable declaration
+        x := logic.x
+
+        // Loop 10 times to draw 10 bat sprites
+        // 0..10 is a range that goes from 0 to 9 (10 is exclusive)
+        for i in 0..10 {
+
+            // Calculate the integer position for each bat sprite
+            // Position is a tuple: (x, y, z)
+            // z is used for sorting the sprites in depth order
+            bat_position := (x + i * 32, 10 + (i % 6) * 30, 0)
+
+            // Draw the bat sprite at the specified position
+            // .sprite() is a member function on MaterialHandle that renders the sprite
+            self.flying_material_ref.sprite(bat_position)
+
+            if i < 2 {
+                bat_position_2 := (50 + i * 20, 30, 0)
+
+                // This demonstrates using a resource id directly
+                // Instead of using self.flying_material_ref, we use `@bat_46x30`
+                // Both approaches work :)
+                @bat_46x30.sprite(bat_position_2)
+            }
+        }
+    }
+}

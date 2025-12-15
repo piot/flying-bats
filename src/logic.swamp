@@ -1,0 +1,60 @@
+mod input::{PlayerInput}
+
+// Logic struct holds all the game state for the your simulation
+// In Swamp, 'struct' defines a data structure with named fields
+struct Logic {
+    tick_count: Int,    /// Counts how many game ticks (each tick is 16 ms) have passed since start
+    direction: Int,     /// 1 for right, -1 for left
+    x: Int,             /// horizontal position of the bats (used to move them back and forth)
+}
+
+// Defines member functions that work with your game specific struct (in this case `Logic`)
+// 'impl' is short for "implementation"
+impl Logic {
+
+    // The `tick` member function is called every 16 ms by the game engine
+    // `#[host_call]` means the engine will automatically call this function
+    // 'mut' is used before a variable name to mark it as mutable (it can be set to another value later)
+    #[host_call]
+    fn tick(mut self) {
+        self.tick_count += 1
+
+        // Move the bats horizontally
+        // Multiply direction by 2 to set the speed (2 pixels per tick)
+        // If direction is 1, bats move right; if -1, they move left
+        self.x += self.direction * 2
+
+        // Check if bats have moved too far to the right
+        if self.x > 200 {
+            // Reverse direction by flipping the sign (1 becomes -1, or vice versa)
+            self.direction = -self.direction
+            // Clamp position to boundary so bats don't go off screen
+            self.x = 200
+        } else if self.x < -50 {
+            // Check if bats have moved too far to the left
+            // Reverse direction to make them bounce back
+            self.direction = -self.direction
+            // Clamp position to left boundary
+            self.x = -50
+        }
+    }
+
+    // `input_changed` member function is called after each tick()
+    // `#[host_call]` means it's automatically called by the game engine
+    #[host_call]
+    fn input_changed(mut self, input: PlayerInput) {
+        // TODO: Add code here to respond to player input
+    }
+
+    // Called in the anchor `simulation` in `main.swamp`. You can name the function
+    // what ever you want, but it is common to name it `new()` for initialization.
+    //
+    // The '-> Logic' means this function returns a Logic struct
+    // You return your own simulation type, with the fields you want
+    fn new() -> Logic {
+        Logic {
+            direction: 1,   // Start moving right
+            ..              // `..` means rest operator, so the rest of the fields are set to zero.
+        }
+    }
+}

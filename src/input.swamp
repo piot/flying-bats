@@ -1,0 +1,10 @@
+// PlayerInput struct that contains all your game specific fields
+// The types can only be `Bool`, `(Int, Int)` or `(Float, Float)`
+// The game engine automatically updates these values and passes them to your simulation
+// in `fn input_changed(mut self, input: PlayerInput)`
+struct PlayerInput {
+    mouse_cursor_position: (Int, Int),
+    mouse_wheel_line_delta: (Float, Float),
+    mouse_left_button: Bool,
+    mouse_right_button: Bool,
+}

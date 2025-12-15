@@ -1,0 +1,18 @@
+use mangrove::audio::{AudioHandle, Sfx}
+mod logic::{Logic}
+
+struct Audio
+
+impl Audio {
+    fn new() -> Audio {
+        // {..} creates an Audio struct with default values
+        Audio {..}
+    }
+
+    // The `tick()` member function is called every 16 ms by the game engine
+    // `#[host_call]` means that it is a function called by the game engine automatically
+    #[host_call]
+    fn tick(mut self, simulation: Logic) {
+        // TODO: Add sound effect playback here
+    }
+}

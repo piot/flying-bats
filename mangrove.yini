@@ -1,0 +1,5 @@
+# Settings for the Mangrove game engine
+
+render {
+    scale 2 # The window will be double the size of the resolution in the game
+}

@@ -1,0 +1,29 @@
+// Import the Render struct from the render module
+// The :: syntax is used as a module separator
+mod render::{Render}
+mod input::{PlayerInput}
+mod audio::{Audio}
+
+// Import everything from the logic module
+// When you don't specify items, you access the module with the name `logic`
+mod logic
+
+// Anchors are compile-time allocations used by the game engine
+// They define the main types of your game that persist between frames
+// Think of them as the "entry points" that the engine will use
+
+// The simulation anchor holds the game logic state
+// you must call the anchor `simulation` for the engine to find it, but you use your own type
+anchor simulation = logic::Logic::new()
+
+// The render anchor handles all drawing/graphics
+// must be called `render` for the game engine to find it
+anchor render = Render::new()
+
+// The {..} syntax creates a struct with all default values
+// the anchor name must be called `input` for the engine to find it
+anchor input = PlayerInput {..}
+
+// The audio anchor manages sound effects and music
+// the anchor name must be called `audio` for the engine to find it
+anchor audio = Audio::new()
